@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Runner - Ultimate Edition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <div class="score-container">
+                <div class="score-label">SCORE</div>
+                <div id="score" class="score-value">00000</div>
+                <div class="high-score-label">HIGH SCORE</div>
+                <div id="highScore" class="high-score-value">00000</div>
+            </div>
+            <div class="game-info">
+                <div class="speed-indicator">
+                    <span>SPEED:</span>
+                    <div class="speed-bar">
+                        <div id="speedBar" class="speed-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="startScreen" class="screen start-screen">
+            <div class="logo">🦖 DINO RUNNER</div>
+            <div class="subtitle">Ultimate Edition</div>
+            <div class="instructions">
+                <div class="instruction-item">
+                    <kbd>SPACE</kbd> or <kbd>↑</kbd> to Jump
+                </div>
+                <div class="instruction-item">
+                    <kbd>↓</kbd> to Crouch
+                </div>
+                <div class="instruction-item">
+                    <kbd>TAP</kbd> to Jump on Mobile
+                </div>
+            </div>
+            <button id="startButton" class="game-button">START GAME</button>
+        </div>
+        
+        <div id="gameOverScreen" class="screen game-over-screen hidden">
+            <div class="game-over-title">GAME OVER</div>
+            <div class="final-score">
+                <div class="final-score-label">Your Score</div>
+                <div id="finalScore" class="final-score-value">00000</div>
+            </div>
+            <button id="restartButton" class="game-button">PLAY AGAIN</button>
+        </div>
+        
+        <div class="controls-hint">
+            <div class="control-hint-item">
+                <span class="key-icon">↑</span>
+                <span>Jump</span>
+            </div>
+            <div class="control-hint-item">
+                <span class="key-icon">↓</span>
+                <span>Crouch</span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>
+
