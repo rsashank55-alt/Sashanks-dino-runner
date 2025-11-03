@@ -1,0 +1,23 @@
+{
+  "name": "dino-runner-ultimate",
+  "version": "1.0.0",
+  "description": "Ultimate Chrome Dinosaur Runner Game",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p $PORT"
+  },
+  "keywords": [
+    "game",
+    "dinosaur",
+    "runner",
+    "canvas",
+    "html5"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
+
