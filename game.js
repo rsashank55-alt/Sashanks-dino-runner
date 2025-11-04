@@ -283,9 +283,9 @@ function update() {
     
     frameCount++;
     
-    // Calculate level based on score (level up every 100 points)
+    // Calculate level based on score (level up every 500 points - longer intervals)
     previousLevel = level;
-    level = Math.floor(score / 100) + 1;
+    level = Math.floor(score / 500) + 1;
     
     // Check for level up
     if (level > previousLevel) {
@@ -306,7 +306,7 @@ function update() {
     // Update dino
     dino.update();
     
-    // Spawn obstacles (includes birds, cacti) - spawn rate increases with level
+    // Spawn obstacles (includes birds, cacti) - obstacles appear in all levels
     // Higher level = more obstacles, lower level = fewer obstacles
     const levelSpawnMultiplier = 0.5 + (level - 1) * 0.35; // Start at 50% spawn rate at level 1, +35% per level
     const spawnRate = config.obstacleSpawnRate * currentSpeed * levelSpawnMultiplier;
