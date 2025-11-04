@@ -308,8 +308,13 @@ function update() {
     
     // Spawn obstacles (includes birds, cacti) - obstacles appear in all levels
     // Higher level = more obstacles, lower level = fewer obstacles
-    // Ensure level 1 has a reasonable spawn rate (minimum 1.0x multiplier)
-    const levelSpawnMultiplier = Math.max(1.0, 0.5 + (level - 1) * 0.35); // Minimum 100% spawn rate, scales up
+    // Level 1 gets a higher spawn rate to ensure obstacles appear
+    let levelSpawnMultiplier;
+    if (level === 1) {
+        levelSpawnMultiplier = 2.0; // 200% spawn rate for level 1 to ensure obstacles appear
+    } else {
+        levelSpawnMultiplier = 0.5 + (level - 1) * 0.35; // Scales up from level 2
+    }
     const spawnRate = config.obstacleSpawnRate * currentSpeed * levelSpawnMultiplier;
     if (Math.random() < spawnRate) {
         spawnObstacle();
