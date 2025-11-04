@@ -67,7 +67,31 @@ body {
 .game-info {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.level-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    align-items: center;
+}
+
+.level-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.level-value {
+    font-size: clamp(24px, 4vw, 32px);
+    font-weight: bold;
+    color: #FFD700;
+    font-family: 'Courier New', monospace;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .speed-indicator {
@@ -254,6 +278,30 @@ kbd {
     color: #ffd700;
     font-family: 'Courier New', monospace;
     text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.final-level {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.final-level-label {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.final-level-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #4ade80;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
 }
 
 .controls-hint {

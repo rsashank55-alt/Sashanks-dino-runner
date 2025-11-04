@@ -26,6 +26,9 @@ let score = 0;
 let highScore = localStorage.getItem('dinoHighScore') || 0;
 let currentSpeed = config.gameSpeed;
 let frameCount = 0;
+let level = 1;
+let previousLevel = 1;
+let levelUpAnimation = null; // Store level-up animation state
 
 // Game Objects
 let dino;
@@ -240,6 +243,8 @@ function handleCrouchRelease() {
 function startGame() {
     state = gameState.PLAYING;
     score = 0;
+    level = 1;
+    previousLevel = 1;
     currentSpeed = config.gameSpeed;
     frameCount = 0;
     obstacles = [];
@@ -247,6 +252,8 @@ function startGame() {
     stars = [];
     particles = [];
     lastObstacleX = 0;
+    levelUpAnimation = null;
+    updateLevel();
     dino.reset();
     document.getElementById('startScreen').classList.add('hidden');
     document.getElementById('gameOverScreen').classList.add('hidden');
@@ -262,6 +269,7 @@ function gameOver() {
     }
     
     document.getElementById('finalScore').textContent = String(score).padStart(5, '0');
+    document.getElementById('finalLevel').textContent = String(level).padStart(2, '0');
     document.getElementById('gameOverScreen').classList.remove('hidden');
     
     // Explosion effect
@@ -275,19 +283,34 @@ function update() {
     
     frameCount++;
     
-    // Update speed
-    currentSpeed = Math.min(config.gameSpeed + frameCount * config.speedIncreaseRate, config.maxSpeed);
+    // Calculate level based on score (level up every 100 points)
+    previousLevel = level;
+    level = Math.floor(score / 100) + 1;
+    
+    // Check for level up
+    if (level > previousLevel) {
+        levelUp();
+    }
+    
+    // Update speed based on level - higher level = faster, lower level = slower
+    const levelSpeedMultiplier = 0.7 + (level - 1) * 0.25; // Start at 70% speed at level 1, +25% per level
+    const baseSpeed = Math.min(config.gameSpeed + frameCount * config.speedIncreaseRate, config.maxSpeed);
+    currentSpeed = Math.min(baseSpeed * levelSpeedMultiplier, config.maxSpeed * 2); // Allow up to 2x max speed
     updateSpeedBar();
     
-    // Update score
-    score += Math.floor(currentSpeed * 0.1);
+    // Update score (increment by at least 1 per frame, scales with speed)
+    score += Math.max(1, Math.floor(currentSpeed * 0.2));
     updateScore();
+    updateLevel();
     
     // Update dino
     dino.update();
     
-    // Spawn obstacles (includes birds, cacti)
-    if (Math.random() < config.obstacleSpawnRate * currentSpeed) {
+    // Spawn obstacles (includes birds, cacti) - spawn rate increases with level
+    // Higher level = more obstacles, lower level = fewer obstacles
+    const levelSpawnMultiplier = 0.5 + (level - 1) * 0.35; // Start at 50% spawn rate at level 1, +35% per level
+    const spawnRate = config.obstacleSpawnRate * currentSpeed * levelSpawnMultiplier;
+    if (Math.random() < spawnRate) {
         spawnObstacle();
     }
     
@@ -474,6 +497,33 @@ function render() {
     
     // Draw particles
     particles.forEach(particle => particle.draw(ctx));
+    
+    // Draw level-up animation
+    if (levelUpAnimation) {
+        levelUpAnimation.frame++;
+        const progress = levelUpAnimation.frame / levelUpAnimation.duration;
+        levelUpAnimation.alpha = 1 - progress;
+        
+        if (levelUpAnimation.frame < levelUpAnimation.duration) {
+            // Draw "LEVEL UP!" text
+            ctx.save();
+            ctx.globalAlpha = levelUpAnimation.alpha;
+            ctx.font = 'bold 60px Arial';
+            ctx.fillStyle = '#FFD700';
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 4;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            const text = `LEVEL ${level}!`;
+            const x = canvas.width / 2;
+            const y = canvas.height / 2 - 50;
+            ctx.strokeText(text, x, y);
+            ctx.fillText(text, x, y);
+            ctx.restore();
+        } else {
+            levelUpAnimation = null;
+        }
+    }
 }
 
 function drawGround() {
@@ -580,8 +630,10 @@ function checkCollision(dino, obstacle) {
 }
 
 function spawnObstacle() {
-    // Ensure minimum spacing between obstacles (at least 300px apart)
-    const minSpacing = 350;
+    // Dynamic spacing based on level - higher level = less spacing (harder), lower level = more spacing (easier)
+    // Level 1: 500px spacing, Level 5: 250px, Level 10: 150px
+    const baseSpacing = 500;
+    const minSpacing = Math.max(150, baseSpacing - (level - 1) * 30);
     if (lastObstacleX > 0 && canvas.width - lastObstacleX < minSpacing) {
         return; // Don't spawn if too close
     }
@@ -622,6 +674,54 @@ function updateScore() {
 
 function updateHighScore() {
     document.getElementById('highScore').textContent = String(highScore).padStart(5, '0');
+}
+
+function updateLevel() {
+    const levelElement = document.getElementById('level');
+    if (levelElement) {
+        levelElement.textContent = String(level).padStart(2, '0');
+    }
+}
+
+function levelUp() {
+    // Create level-up animation
+    levelUpAnimation = {
+        frame: 0,
+        duration: 60, // 1 second at 60fps
+        alpha: 1
+    };
+    
+    // Create celebration particles
+    for (let i = 0; i < 30; i++) {
+        const particle = new Particle(
+            canvas.width / 2,
+            canvas.height / 2,
+            '#FFD700'
+        );
+        // Override velocity for celebration effect
+        particle.vx = (Math.random() - 0.5) * 10;
+        particle.vy = (Math.random() - 0.5) * 10;
+        particle.life = 30 + Math.random() * 20;
+        particle.maxLife = particle.life;
+        particles.push(particle);
+    }
+    
+    // Play level-up sound effect (visual only, no audio)
+    // Add visual flash effect
+    const flash = document.createElement('div');
+    flash.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(255, 215, 0, 0.3);
+        pointer-events: none;
+        z-index: 1000;
+        animation: flash 0.3s ease-out;
+    `;
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 300);
 }
 
 function updateSpeedBar() {
