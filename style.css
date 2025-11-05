@@ -304,6 +304,42 @@ kbd {
     text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
 }
 
+.personal-best {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.personal-best-label {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.personal-best-value {
+    font-size: 42px;
+    font-weight: bold;
+    color: #fbbf24;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+}
+
 .controls-hint {
     position: absolute;
     bottom: 20px;

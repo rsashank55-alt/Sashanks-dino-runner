@@ -270,6 +270,7 @@ function gameOver() {
     
     document.getElementById('finalScore').textContent = String(score).padStart(5, '0');
     document.getElementById('finalLevel').textContent = String(level).padStart(2, '0');
+    document.getElementById('personalBest').textContent = String(highScore).padStart(5, '0');
     document.getElementById('gameOverScreen').classList.remove('hidden');
     
     // Explosion effect
